@@ -1,5 +1,7 @@
 package ru.jrmbot.core;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -12,10 +14,22 @@ import java.time.LocalDate;
 
 import static ru.jrmbot.constant.VarConstant.*;
 
+@Component
 public class CoreBot extends TelegramLongPollingBot {
-    private SendMessageOperationService sendMessageOperationService = new SendMessageOperationService();
-    private HashMapStore store = new HashMapStore();
+
+    private final SendMessageOperationService sendMessageOperationService;
+    private final HashMapStore store;
     private boolean isStartPlanning;
+    @Value("${token}")
+    private String token;
+    @Value("${bot.username}")
+    String botUsername;
+
+    public CoreBot(SendMessageOperationService sendMessageOperationService, HashMapStore store) {
+        this.sendMessageOperationService = sendMessageOperationService;
+        this.store = store;
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -56,12 +70,14 @@ public class CoreBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "SpringBootDemoBot_bot";
+        return botUsername;
     }
 
+
     @Override
+
     public String getBotToken() {
-        return ""; //telegram bot token
+        return token; //telegram bot token
     }
 
     private <T extends BotApiMethod> void executeMessage(T sendMessage) {

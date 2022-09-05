@@ -1,5 +1,6 @@
 package ru.jrmbot.service;
 
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,12 +12,17 @@ import java.util.List;
 
 import static ru.jrmbot.constant.VarConstant.*;
 
+@Service
 public class SendMessageOperationService {
     private final String GREETING_MESSAGE = "Hello! Let's go planning";
     private final String PLANNING_MESSAGE = "Insert deals, after planning press 'End planning'";
     private final String END_PLANNING_MESSAGE = "Planning is ended, to show press 'Show deals'";
     private final String INSTRUCTIONS = "Do you want to read instructions?";
-    private final ButtonService buttonService = new ButtonService();
+    private final ButtonService buttonService;
+
+    public SendMessageOperationService(ButtonService buttonService) {
+        this.buttonService = buttonService;
+    }
 
     public SendMessage createGreetingInformation(Update update) {
         SendMessage message = createSimpleMessage(update, GREETING_MESSAGE);

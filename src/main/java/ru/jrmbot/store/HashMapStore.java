@@ -1,8 +1,11 @@
 package ru.jrmbot.store;
 
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDate;
 import java.util.*;
 
+@Repository
 public class HashMapStore implements BaseStore{
     private Map<LocalDate, List<String>> localStore = new HashMap<>();
 
